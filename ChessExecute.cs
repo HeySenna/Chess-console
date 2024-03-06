@@ -6,10 +6,9 @@ namespace Chess_console
     {
         public static void Execute()
         {
-            Position P;
-            P = new Position(3, 4);
+            Board board = new Board(8, 8);
 
-            Console.WriteLine(P);
+            Console.ReadLine();
         }
     }
 }

@@ -3,18 +3,18 @@ namespace board
 {
     class Position
     {
-        public int line { get; set; }
+        public int rows { get; set; }
         public int column { get; set; }
 
-        public Position(int line, int column)
+        public Position(int rows, int column)
         {
-            this.line = line;
+            this.rows = rows;
             this.column = column;
         }
 
         public override string ToString()
         {
-            return line
+            return rows
                 + ","
                 + column;
         }
