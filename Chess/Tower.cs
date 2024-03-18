@@ -1,6 +1,6 @@
 ﻿using board;
 
-namespace chess
+namespace Chess
 {
     class Tower : Piece
     {

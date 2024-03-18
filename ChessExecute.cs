@@ -1,5 +1,5 @@
 ﻿using board;
-using chess;
+using Chess;
 
 namespace Chess_console
 {
@@ -9,19 +9,25 @@ namespace Chess_console
         {
             try
             {
-                Board board = new Board(8, 8);
+                ChessMatch match = new ChessMatch();
+                while(!match.finished)
+                {
+                    Console.Clear();
+                    Screen.printBoard(match.board);
 
-                board.addPiece(new Tower(board, Color.Black), new Position(0, 0));
-                board.addPiece(new Tower(board, Color.Black), new Position(1, 9));
-                board.addPiece(new King(board, Color.Black), new Position(0, 2));
+                    Console.WriteLine();
+                    Console.Write("Origem: ");
+                    Position origem = Screen.readPositionChess().toPosition();
+                    Console.Write("Destiny: ");
+                    Position destiny = Screen.readPositionChess().toPosition();
 
-                Screen.printBoard(board);
+                    match.executeMoviment(origem, destiny);
+                }
             }
             catch (BoardException e)
             {
                 Console.WriteLine(e.Message);
             }
-            Console.ReadLine();
         }
     }
 }
