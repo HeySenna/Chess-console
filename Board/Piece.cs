@@ -1,24 +1,48 @@
 ﻿
 namespace board
 {
-    class Piece
+    abstract class Piece
     {
-        public Position position {  get; set; }
-        public Color color {  get; protected set; }
-        public  int qteMoviments { get; protected set; }
-        public Board board { get; protected set; }
+        public Position Position {  get; set; }
+        public Color Color {  get; protected set; }
+        public  int QteMovements { get; protected set; }
+        public Board Board { get; protected set; }
 
         public Piece(Board board, Color color)
         {
-            this.position = null;
-            this.board = board;
-            this.color = color;
-            this.qteMoviments = 0;
+            this.Position = null;
+            this.Board = board;
+            this.Color = color;
+            this.QteMovements = 0;
         }
 
-        public void incrementQteMoviment()
+        public void IncrementQteMovement()
         {
-            qteMoviments++;
+            QteMovements++;
         }
+
+        public bool ExistPossibleMovements()
+        {
+            bool[,] mat = PossibleMovement();
+            {
+                for (int i = 0; i < Board.Rows; i++)
+                {
+                    for(int j = 0; j < Board.Columns; j++)
+                    {
+                        if(mat[i, j])
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        public bool CanMoveToPosition(Position pos)
+        {
+            return PossibleMovement()[pos.Rows, pos.Column];
+        }
+
+        public abstract bool[,] PossibleMovement();
     }
 }

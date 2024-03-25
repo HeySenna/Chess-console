@@ -3,61 +3,61 @@ namespace board
 {
     class Board
     {
-        public int rows { get; set; }
-        public int columns { get; set; }
-        private Piece[,] pieces;
+        public int Rows { get; set; }
+        public int Columns { get; set; }
+        private Piece[,] Pieces;
 
         public Board(int rows, int columns)
         {
-            this.rows = rows;
-            this.columns = columns;
-            pieces = new Piece[rows, columns];
+            this.Rows = rows;
+            this.Columns = columns;
+            Pieces = new Piece[rows, columns];
         }
 
-        public Piece piece(int rows, int columns)
+        public Piece Piece(int rows, int columns)
         {
-            return pieces[rows, columns];
+            return Pieces[rows, columns];
         }
 
-        public Piece piece(Position pos)
+        public Piece Piece(Position pos)
         {
-            return pieces[pos.rows, pos.column];
+            return Pieces[pos.Rows, pos.Column];
         }
 
-        public bool hasPiece(Position pos)
+        public bool HasPiece(Position pos)
         {
-            validatePosition(pos);
-            return piece(pos) != null;
+            ValidatePosition(pos);
+            return Piece(pos) != null;
         }
 
-        public void addPiece(Piece p, Position pos)
+        public void AddPiece(Piece p, Position pos)
         {
-            if (hasPiece(pos))
+            if (HasPiece(pos))
             {
                 throw new BoardException("Already exist a piece in this position!");
             }
 
-            pieces[pos.rows, pos.column] = p;
-            p.position = pos;
+            Pieces[pos.Rows, pos.Column] = p;
+            p.Position = pos;
         }
 
-        public Piece removePiece(Position pos)
+        public Piece RemovePiece(Position pos)
         {
-            if(piece(pos) == null)
+            if(Piece(pos) == null)
             {
                 return null;
             }
             
-            Piece aux = piece(pos);
-            aux.position = null;
-            pieces[pos.rows, pos.column] = null;
+            Piece aux = Piece(pos);
+            aux.Position = null;
+            Pieces[pos.Rows, pos.Column] = null;
             return aux;
 
         }
 
         public bool validPosition (Position pos)
         {
-            if(pos.rows < 0 || pos.rows >= rows ||  pos.column < 0 ||  pos.column >= columns)
+            if(pos.Rows < 0 || pos.Rows >= Rows ||  pos.Column < 0 ||  pos.Column >= Columns)
             {
                 return false;
             }
@@ -65,7 +65,7 @@ namespace board
             return true;
         }
 
-        public void validatePosition(Position pos)
+        public void ValidatePosition(Position pos)
         {
             if (!validPosition(pos))
             {
