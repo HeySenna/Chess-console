@@ -10,6 +10,7 @@ namespace Chess
         public bool Finished { get; private set; }
         public HashSet<Piece> Pieces;
         public HashSet<Piece> Captured;
+        public bool Xeque { get; private set; }
 
         public ChessMatch()
         {
@@ -17,12 +18,13 @@ namespace Chess
             Turn = 1;
             ActualPlayer = Color.White;
             Finished = false;
+            Xeque = false;
             Pieces = new HashSet<Piece>();
             Captured = new HashSet<Piece>();
             AddPieces();
         }
 
-        public void ExecuteMovement(Position origem, Position destiny)
+        public Piece ExecuteMovement(Position origem, Position destiny)
         {
             Piece p = Board.RemovePiece(origem);
             p.IncrementQteMovement();
@@ -33,12 +35,37 @@ namespace Chess
             {
                 Captured.Add(capturedPiece);
             }
+            return capturedPiece;
+        }
 
+        public void UndoMovement(Position origem, Position destiny, Piece capturedPiece)
+        {
+            Piece p = Board.RemovePiece(destiny);
+            p.DecrementQteMovement();
+            if (capturedPiece != null)
+            {
+                Board.AddPiece(capturedPiece, destiny);
+                Captured.Remove(capturedPiece);
+            }
+            Board.AddPiece(p, origem);
         }
 
         public void MakeAMove(Position origem, Position destiny)
         {
-            ExecuteMovement(origem, destiny);
+            Piece capturedPiece = ExecuteMovement(origem, destiny);
+            if (IsInCheck(ActualPlayer))
+            {
+                UndoMovement(origem, destiny, capturedPiece);
+                throw new BoardException("You can't put yourself in Xeque.");
+            }
+            if(IsInCheck(Enemy(ActualPlayer)))
+            {
+                Xeque = true;
+            }
+            else
+            {
+                Xeque= false;
+            }
             Turn++;
             ChangePlayer();
         }
@@ -106,6 +133,50 @@ namespace Chess
             }
             aux.ExceptWith(CapturedPieces(color));
             return aux;
+        }
+
+        private Piece King(Color color)
+        {
+            foreach (Piece x in PiecesInGame(color))
+            {
+                if ( x is King)
+                {
+                    return x;
+                }
+            }
+            return null;
+        }
+
+        private Color Enemy(Color color)
+        {
+            if(color == Color.White)
+            {
+                return Color.Black;
+            }
+            else
+            {
+                return Color.White;
+            }   
+
+        }
+
+        public bool IsInCheck(Color color)
+        {
+            Piece K = King(color);
+            if (K == null)
+            {
+                throw new BoardException($"There's no king at the color {color} on the board.");
+            }
+
+            foreach(Piece x in PiecesInGame(Enemy(color)))
+            {
+                bool[,] mat = x.PossibleMovement();
+                if (mat[K.Position.Rows, K.Position.Column])
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         public void AddNewPieces (char column, int row, Piece piece)
         {

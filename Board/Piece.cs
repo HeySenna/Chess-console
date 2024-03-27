@@ -21,6 +21,11 @@ namespace board
             QteMovements++;
         }
 
+        public void DecrementQteMovement()
+        {
+            QteMovements--;
+        }
+
         public bool ExistPossibleMovements()
         {
             bool[,] mat = PossibleMovement();
