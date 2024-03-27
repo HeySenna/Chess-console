@@ -16,10 +16,7 @@ namespace Chess_console
                     {
                         Console.WriteLine();
                         Console.Clear();
-                        Screen.printBoard(match.GetBoard());
-                        Console.WriteLine();
-                        Console.WriteLine($"Turn: {match.Turn}");
-                        Console.WriteLine($"Waiting move: {match.ActualPlayer}");
+                        Screen.PrintMatch(match);
 
 
                         Console.WriteLine();
@@ -27,10 +24,10 @@ namespace Chess_console
                         Position origem = Screen.readPositionChess().toPosition();
                         match.ValidateOrigemPosition(origem);
 
-                        bool[,] possiblePositions = match.GetBoard().Piece(origem).PossibleMovement();
+                        bool[,] possiblePositions = match.Board.Piece(origem).PossibleMovement();
 
                         Console.Clear();
-                        Screen.printBoard(match.GetBoard(), possiblePositions);
+                        Screen.printBoard(match.Board, possiblePositions);
 
                         Console.WriteLine();
                         Console.Write("Destiny: ");

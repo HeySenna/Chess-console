@@ -4,58 +4,57 @@ namespace Chess
 {
     class ChessMatch
     {
-        private Board board;
-
-        public Board GetBoard()
-        {
-            return board;
-        }
-
-        public void SetBoard(Board value)
-        {
-            board = value;
-        }
-
+        public Board Board { get; private set; }
         public int Turn { get; private set; }
         public Color ActualPlayer { get; private set; }
         public bool Finished { get; private set; }
+        public HashSet<Piece> Pieces;
+        public HashSet<Piece> Captured;
 
         public ChessMatch()
         {
-            board = new Board (8, 8);
+            Board = new Board(8, 8);
             Turn = 1;
             ActualPlayer = Color.White;
             Finished = false;
-            addPieces();
+            Pieces = new HashSet<Piece>();
+            Captured = new HashSet<Piece>();
+            AddPieces();
         }
 
         public void ExecuteMovement(Position origem, Position destiny)
         {
-            Piece p = board.RemovePiece(origem);
+            Piece p = Board.RemovePiece(origem);
             p.IncrementQteMovement();
-            Piece capturedPiece = board.RemovePiece(destiny);
-            board.AddPiece(p, destiny);
+            Piece capturedPiece = Board.RemovePiece(destiny);
+            Board.AddPiece(p, destiny);
+
+            if(capturedPiece != null)
+            {
+                Captured.Add(capturedPiece);
+            }
+
         }
 
         public void MakeAMove(Position origem, Position destiny)
         {
             ExecuteMovement(origem, destiny);
-            Turn ++;
+            Turn++;
             ChangePlayer();
         }
         public void ValidateOrigemPosition(Position pos)
         {
-            if (board.Piece(pos) == null)
+            if (Board.Piece(pos) == null)
             {
                 throw new BoardException("There is no piece in the chosen position!");
             }
 
-            if(ActualPlayer != board.Piece(pos).Color) 
+            if (ActualPlayer != Board.Piece(pos).Color)
             {
                 throw new BoardException("The chosen piece isn't yours!");
             }
 
-            if (!board.Piece(pos).ExistPossibleMovements())
+            if (!Board.Piece(pos).ExistPossibleMovements())
             {
                 throw new BoardException("There is no possible movements for the chosen piece!");
             }
@@ -63,16 +62,16 @@ namespace Chess
 
         public void ValidateDestinyPosition(Position origem, Position destiny)
         {
-            if (!board.Piece(origem).CanMoveToPosition(destiny))
+            if (!Board.Piece(origem).CanMoveToPosition(destiny))
             {
                 throw new BoardException("Invalid destiny position.");
             }
         }
         private void ChangePlayer()
         {
-            if(ActualPlayer == Color.White)
+            if (ActualPlayer == Color.White)
             {
-               ActualPlayer = Color.Black;
+                ActualPlayer = Color.Black;
             }
 
             else
@@ -80,22 +79,55 @@ namespace Chess
                 ActualPlayer = Color.White;
             }
         }
-
-        private void addPieces() 
+        public HashSet<Piece> CapturedPieces(Color color)
         {
-            board.AddPiece(new Tower(board, Color.White), new ChessPosition('C', 1).toPosition());
-            board.AddPiece(new Tower(board, Color.White), new ChessPosition('C', 2).toPosition());
-            board.AddPiece(new Tower(board, Color.White), new ChessPosition('D', 2).toPosition());
-            board.AddPiece(new Tower(board, Color.White), new ChessPosition('E', 2).toPosition());
-            board.AddPiece(new Tower(board, Color.White), new ChessPosition('E', 1).toPosition());
-            board.AddPiece(new King(board, Color.White), new ChessPosition('D', 1).toPosition());
+            HashSet<Piece> aux = new HashSet<Piece>();
 
-            board.AddPiece(new Tower(board, Color.Black), new ChessPosition('C', 7).toPosition());
-            board.AddPiece(new Tower(board, Color.Black), new ChessPosition('C', 8).toPosition());
-            board.AddPiece(new Tower(board, Color.Black), new ChessPosition('D', 7).toPosition());
-            board.AddPiece(new Tower(board, Color.Black), new ChessPosition('E', 7).toPosition());
-            board.AddPiece(new Tower(board, Color.Black), new ChessPosition('E', 8).toPosition());
-            board.AddPiece(new King(board, Color.Black), new ChessPosition('D', 8).toPosition());
+            foreach (Piece x in Captured)
+            {
+                if (x.Color == color)
+                {
+                    aux.Add(x);
+                }
+            }
+            return aux;
+        }
+
+        public HashSet<Piece> PiecesInGame(Color color)
+        {
+            HashSet<Piece> aux = new HashSet<Piece>();
+
+            foreach (Piece x in Pieces)
+            {
+                if (x.Color == color)
+                {
+                    aux.Add(x);
+                }
+            }
+            aux.ExceptWith(CapturedPieces(color));
+            return aux;
+        }
+        public void AddNewPieces (char column, int row, Piece piece)
+        {
+            Board.AddPiece(piece, new ChessPosition(column, row).toPosition());
+            Pieces.Add(piece);
+        }
+        private void AddPieces()
+        {
+            AddNewPieces('C', 1, new Tower(Board, Color.White));
+            AddNewPieces('C', 2, new Tower(Board, Color.White));
+            AddNewPieces('D', 2, new Tower(Board, Color.White));
+            AddNewPieces('E', 2, new Tower(Board, Color.White));
+            AddNewPieces('E', 1, new Tower(Board, Color.White));
+            AddNewPieces('D', 1, new King(Board, Color.White));
+
+            AddNewPieces('C', 7, new Tower(Board, Color.Black));
+            AddNewPieces('C', 8, new Tower(Board, Color.Black));
+            AddNewPieces('D', 7, new Tower(Board, Color.Black));
+            AddNewPieces('E', 7, new Tower(Board, Color.Black));
+            AddNewPieces('E', 8, new Tower(Board, Color.Black));
+            AddNewPieces('D', 8, new King(Board, Color.Black));
+
         }
     }
 }
