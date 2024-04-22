@@ -15,7 +15,7 @@ namespace Chess
             return p == null || p.Color != this.Color;
         }
 
-        public override bool[,] PossibleMovement()
+        public override bool[,] PossibleMovements()
         {
             bool[,] mat = new bool[Board.Rows, Board.Columns];
 
@@ -23,7 +23,7 @@ namespace Chess
 
             //North
             pos.setValue(Position.Rows - 1, Position.Column);
-            while(Board.validPosition(pos) && canMove(pos))
+            while(Board.ValidPosition(pos) && canMove(pos))
             {
                 mat[pos.Rows, pos.Column] = true;
 
@@ -36,7 +36,7 @@ namespace Chess
 
             //South
             pos.setValue(Position.Rows + 1, Position.Column);
-            while (Board.validPosition(pos) && canMove(pos))
+            while (Board.ValidPosition(pos) && canMove(pos))
             {
                 mat[pos.Rows, pos.Column] = true;
 
@@ -49,7 +49,7 @@ namespace Chess
 
             //East
             pos.setValue(Position.Rows , Position.Column + 1);
-            while (Board.validPosition(pos) && canMove(pos))
+            while (Board.ValidPosition(pos) && canMove(pos))
             {
                 mat[pos.Rows, pos.Column] = true;
 
@@ -62,7 +62,7 @@ namespace Chess
 
             //West
             pos.setValue(Position.Rows, Position.Column - 1);
-            while (Board.validPosition(pos) && canMove(pos))
+            while (Board.ValidPosition(pos) && canMove(pos))
             {
                 mat[pos.Rows, pos.Column] = true;
 

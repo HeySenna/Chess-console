@@ -55,7 +55,7 @@ namespace board
 
         }
 
-        public bool validPosition (Position pos)
+        public bool ValidPosition (Position pos)
         {
             if(pos.Rows < 0 || pos.Rows >= Rows ||  pos.Column < 0 ||  pos.Column >= Columns)
             {
@@ -67,7 +67,7 @@ namespace board
 
         public void ValidatePosition(Position pos)
         {
-            if (!validPosition(pos))
+            if (!ValidPosition(pos))
             {
                 throw new BoardException("Invalid Position!");
             }

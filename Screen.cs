@@ -12,11 +12,19 @@ namespace Chess_console
             PrintCapturedPieces(match);
             Console.WriteLine();
             Console.WriteLine($"Turn: {match.Turn}");
-            Console.WriteLine($"Waiting move: {match.ActualPlayer}");
 
-            if (match.Xeque)
+            if (!match.Finished)
             {
-                Console.WriteLine("XEQUE!");
+                Console.WriteLine($"Waiting move: {match.ActualPlayer}");
+                if (match.Xeque)
+                {
+                    Console.WriteLine("XEQUE!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("XEQUEMATE!");
+                Console.WriteLine($"Winner: {match.ActualPlayer}");
             }
         }
 

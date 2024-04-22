@@ -24,7 +24,7 @@ namespace Chess_console
                         Position origem = Screen.readPositionChess().toPosition();
                         match.ValidateOrigemPosition(origem);
 
-                        bool[,] possiblePositions = match.Board.Piece(origem).PossibleMovement();
+                        bool[,] possiblePositions = match.Board.Piece(origem).PossibleMovements();
 
                         Console.Clear();
                         Screen.printBoard(match.Board, possiblePositions);
@@ -43,6 +43,8 @@ namespace Chess_console
                         Console.ReadLine();
                     }
                 }
+                Console.Clear();
+                Screen.PrintMatch(match);
             }
             catch (BoardException e)
             {
